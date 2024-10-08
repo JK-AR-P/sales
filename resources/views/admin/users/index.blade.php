@@ -58,7 +58,6 @@
 <script>
     $(document).ready(function() {
         let tableUsers;
-        $(document).ready(function() {
             $(function() {
                 loadData();
 
@@ -235,7 +234,7 @@
                     }
                 })
             }
-        })
+
     });
 
 </script>

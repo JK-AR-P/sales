@@ -72,7 +72,6 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $user = User::create([
-                'username' => $request->username,
                 'fullname' => $request->fullname,
                 'email' => $request->email,
                 'telp' => $request->telp,

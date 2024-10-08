@@ -14,42 +14,35 @@
                             <label>Nama</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="fullname" placeholder="Nama">
-                        </div>
-
-                        <div class="col-md-4">
-                            <label>Username</label>
-                        </div>
-                        <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="username" placeholder="Username">
+                            <input type="text" class="form-control" name="fullname" placeholder="Nama" required>
                         </div>
 
                         <div class="col-md-4">
                             <label>Email</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="email" class="form-control" name="email" placeholder="Email">
+                            <input type="email" class="form-control" name="email" placeholder="Email" required>
                         </div>
 
                         <div class="col-md-4">
                             <label>Telepon</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="number" class="form-control" name="telp" placeholder="0">
+                            <input type="number" class="form-control" name="telp" placeholder="0" required>
                         </div>
 
                         <div class="col-md-4">
                             <label>Tgl Lahir</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="date" class="form-control" name="birthdate">
+                            <input type="date" class="form-control" name="birthdate" required>
                         </div>
 
                         <div class="col-md-4">
                             <label>Wilayah</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="region" placeholder="Wilayah">
+                            <input type="text" class="form-control" name="region" placeholder="Wilayah" required>
                         </div>
                     </div>
                 </div>

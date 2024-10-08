@@ -26,7 +26,6 @@ class UpdateUserRequest extends FormRequest
         $userId = decrypt($this->route('marketing'));
         return [
             'fullname' => 'required|string|max:255',
-            'username' => 'required|string|max:30',
             'email' => 'required|email|max:255|unique:users,email,' . $userId,
             'telp' => 'required|numeric|min:10|unique:users,telp,' . $userId,
             'birthdate' => 'required|date',

@@ -24,7 +24,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="../admin_company/index.php" class='sidebar-link'>
+                    <a href="{{ route('admin.company.index') }}" class='sidebar-link'>
                         <i data-feather="globe" width="20"></i>
                         <span>Company Profile</span>
                     </a>

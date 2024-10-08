@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{{ asset('libs/toastr/build/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('libs/pace-progress/themes/blue/pace-theme-minimal.css') }}">
+    <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
 
@@ -64,6 +65,7 @@
     <script src="{{ asset('libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-rowgroup/js/dataTables.rowGroup.min.js') }}"></script>
     <script src="{{ asset('libs/momentjs/moment.js') }}"></script>
+    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 
     {{-- Support JS --}}
     <script src="{{ asset('js/support/loader.js') }}"></script>

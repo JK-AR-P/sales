@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,10 @@ Route::middleware(['auth', 'role:admin|superadmin'])->prefix('admin')->name('adm
     // CRUD User Marketing
     Route::get('/marketing/data', [UserController::class, 'data'])->name('marketing.data');
     Route::resource('marketing', UserController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+
+    // CRUD Company Profile
+    Route::get('/company/data', [CompanyProfileController::class, 'data'])->name('company.data');
+    Route::resource('company', CompanyProfileController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 });
 
 // User Dashboard Routes

@@ -19,13 +19,6 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label>Username</label>
-                        </div>
-                        <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="username" placeholder="Username" value="Rifan Hardiyan">
-                        </div>
-
-                        <div class="col-md-4">
                             <label>Email</label>
                         </div>
                         <div class="col-md-8 form-group">
