@@ -1,9 +1,9 @@
-<div class="modal fade" id="addCompanyProfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="addCompanyProfile" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
-            <form action="{{ route('admin.company.store') }}" method="POST" enctype="multipart/form-data" id="formAddCompanyProfile" class="xform dropzone">
+            <form action="{{ route('admin.company.store') }}" method="POST" enctype="multipart/form-data" id="formAddCompanyProfile" class="dropzone">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Upload Company Profile</h5>
+                    <h5 class="modal-title" id="titleModal">Upload Company Profile</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="invalid-feedback fw-bold">Please upload an image.</div>
+                            <div class="invalid-feedback fw-bold" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         <i class="bx bx-x d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Close</span>
                     </button>
-                    <button type="submit" class="btn btn-primary ml-1">
+                    <button type="button" class="btn btn-primary ml-1" id="formSubmit">
                         <i class="bx bx-check d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Upload File</span>
                     </button>

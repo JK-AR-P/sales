@@ -76,9 +76,9 @@
                         <thead>
                             <tr>
                                 <th class="text-center" width="1%">No</th>
-                                <th class="text-center">Nama Perusahaan</th>
+                                <th class="text-center" width="40%">Nama Perusahaan</th>
                                 <th class="text-center">File .PDF / .PPT</th>
-                                <th class="text-center" width="10%"><i class="fa fa-gear"></i></th>
+                                <th class="text-center" width="20%"><i class="fa fa-gear"></i></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,6 +97,7 @@
     </section>
 
     @include('admin.company.modal-add')
+    @include('admin.company.modal-edit')
 
 </div>
 @endsection
@@ -112,7 +113,7 @@
             /**
              * Setup dropzone
              */
-             var myDropzone = new Dropzone("#formAddCompanyProfile", {
+            var myDropzone = new Dropzone("#formAddCompanyProfile", {
                 previewTemplate: $('#dzPreviewContainer').html(),
                 url: '{{ route('admin.company.store') }}',
                 autoProcessQueue: false,
@@ -120,16 +121,22 @@
                 parallelUploads: 5,
                 maxFiles: 5,
                 maxFilesize: 2, // Limit of 2 MB
-                acceptedFiles: '.pdf, .ppt, .pptx',
+                acceptedFiles: '.pdf, .ppt, .pptx', // Only accept these file types
                 previewsContainer: "#previews",
                 timeout: 0,
                 init: function() {
                     var myDropzone = this;
 
+                    // Event for adding a file
                     this.on('addedfile', function(file) {
-                        $('[data-dz-message]').html('To remove click the X button');
-                        $('.dropzone-drag-area').removeClass('is-invalid').next('.invalid-feedback').hide();
 
+                        // Always reset invalid status on adding a new file
+                        $('.dropzone-drag-area').removeClass('is-invalid');
+                        $('.invalid-feedback').html('').hide();
+                        $('#formSubmit').prop('disabled', false);
+                        $('[data-dz-message]').html('To remove click the X button');
+
+                        // Get the file extension
                         var fileType = file.name.split('.').pop().toLowerCase();
                         var iconClass = 'fa-file';
 
@@ -148,9 +155,187 @@
                         $(file.previewElement).find('.dz-size').text(displaySize + ' KB');
                     });
 
-                    this.on('removedfile', function(file) {
-                        if (myDropzone.files.length === 0) {
-                            $('[data-dz-message]').html('<i class="fa-solid fa-cloud-arrow-up"></i> Click or Drag file here to upload');
+                    // Event for success (when the file is accepted)
+                    this.on('success', function(file) {
+                        console.log("File accepted: ", file);
+                        $('.dropzone-drag-area').removeClass('is-invalid');
+                        $('.invalid-feedback').html('').hide();
+                    });
+
+                    // Event for error (when the file is rejected)
+                    this.on('error', function(file, message) {
+                        console.log("File rejected: ", file);
+                        $('.dropzone-drag-area').addClass('is-invalid');
+                        $('.invalid-feedback').html(message).show();
+                        this.removeFile(file);
+                    });
+
+                    // Accept callback for custom validation
+                    this.on('accept', function(file, done) {
+                        if (['pdf', 'ppt', 'pptx'].includes(file.name.split('.').pop().toLowerCase())) {
+                            done(); // Accept the file
+                        } else {
+                            done("Invalid file type. Only .pdf, .ppt, and .pptx are allowed."); // Reject the file
+                        }
+                    });
+                }
+            });
+
+
+            $('#formSubmit').on('click', function(event) {
+                let form = $('#formAddCompanyProfile');
+                event.preventDefault();
+                var $this = $(this);
+
+                // Show submit button spinner
+                $this.children('.spinner-border').removeClass('d-none');
+
+                // Validate form & submit if valid
+                if (form[0].checkValidity() === false) {
+                    event.stopPropagation();
+
+                    // Show error messages & hide button spinner
+                    form.addClass('was-validated');
+
+                    // If Dropzone is empty show error message
+                    if (!myDropzone.getQueuedFiles().length > 0) {
+                        $('.dropzone-drag-area').addClass('is-invalid').next('.invalid-feedback').show();
+                    }
+                } else {
+                    // Append Dropzone files to FormData
+                    var formData = new FormData(form[0]);
+                    myDropzone.files.forEach(function(file) {
+                        formData.append('files[]', file);
+                    });
+
+                    // Use AJAX for form submission
+                    $.ajax({
+                        url: form.attr('action')
+                        , type: 'POST'
+                        , data: formData
+                        , processData: false
+                        , contentType: false
+                        , beforeSend: function() {
+                            Swal.fire({
+                                title: 'On progress...'
+                                , html: 'Please wait...'
+                                , allowEscapeKey: false
+                                , allowOutsideClick: false
+                                , didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        }
+                        , success: function(res) {
+                            Pace.stop();
+                            Swal.close();
+
+                            let fields = [
+                                form.find('input')
+                                , form.find('select')
+                                , form.find('textarea')
+                            ];
+
+                            for (let i in fields) {
+                                fields[i].removeClass('is-invalid');
+                                fields[i].parent().find('span.invalid-feedback').remove();
+                            }
+
+                            if (res.status === 'success') {
+                                form.trigger('xform-success', [res]);
+                            } else if (res.status === 'error') {
+                                $('.card-login').removeClass('animate__zoomInUp').addClass('animate__jello');
+                                form.trigger('xform-error', [res]);
+                            }
+
+                            if (res.resets) {
+                                if ('all' === res.resets) {
+                                    form.trigger('reset');
+                                    form.find('label.custom-file-label').html('Choose file');
+                                } else {
+                                    for (let i in res.resets) {
+                                        let name = res.resets[i];
+                                        form.find('input[name="' + name + '"]').val('');
+                                        form.find('select[name="' + name + '"]').val('');
+                                        form.find('textarea[name="' + name + '"]').html('');
+                                        form.find('label.custom-file-label').html('');
+                                    }
+                                }
+                            }
+
+                            if (res.errors) {
+                                let focus_first_error_field = true;
+                                for (let field in res.errors) {
+                                    let message = res.errors[field][0];
+                                    let input = form.find(`input[name="${field}"]`);
+
+                                        if (input.length > 0) {
+                                            input.addClass("is-invalid");
+                                            input.parent().append(`<span class="invalid-feedback">${message}</span>`);
+                                            if (focus_first_error_field) {
+                                                input.focus();
+                                                focus_first_error_field = false;
+                                            }
+                                        }
+
+                                        // Process select fields
+                                        let select = form.find(`select[name="${field}"]`);
+                                        if (select.length > 0) {
+                                            select.addClass("is-invalid");
+                                            select.parent().append(`<span class="invalid-feedback">${message}</span>`);
+                                            if (focus_first_error_field) {
+                                                select.focus();
+                                                focus_first_error_field = false;
+                                            }
+                                        }
+
+                                        // Process textarea fields
+                                        let textarea = form.find(`textarea[name="${field}"]`);
+                                        if (textarea.length > 0) {
+                                            textarea.addClass("is-invalid");
+                                            textarea.parent().append(`<span class="invalid-feedback">${message}</span>`);
+                                            if (focus_first_error_field) {
+                                                textarea.focus();
+                                                focus_first_error_field = false;
+                                            }
+                                        }
+                                }
+                            }
+
+                            if (res.toast) {
+                                if ('success' == res.status) {
+                                    toastr.success(res.toast);
+                                } else if ('info' == res.status) {
+                                    toastr.info(res.toast);
+                                } else if ('error' == res.status) {
+                                    toastr.error(res.toast);
+                                } else if ('warning' == res.status) {
+                                    toastr.warning(res.toast);
+                                }
+                            }
+
+                            if (res.redirect) {
+                                setTimeout(function() {
+                                    toastr.info('Redirecting...');
+                                }, 1000);
+                                setTimeout(function() {
+                                    window.location.href = res.redirect;
+                                }, 2000);
+                            }
+
+                            // Hide submit button spinner
+                            $this.children('.spinner-border').addClass('d-none');
+                        }
+                        , error: function(err) {
+                            Pace.stop();
+                            Swal.close();
+                            form.find('.submit').prop('disabled', false);
+
+                            if (err.responseJSON) {
+                                toastr.error(err.statusText + ' | ' + err.responseJSON.message);
+                            } else {
+                                toastr.error(err.statusText);
+                            }
                         }
                     });
                 }
@@ -185,7 +370,8 @@
 
                         let data = tableCompanyProfile.row($(this).parents('tr')).data();
                         let url = $(this).data('url')
-                        edit(data, url)
+                        let id = $(this).data('id')
+                        edit(data, url, id)
                     })
 
                     $('table#tableCompanyProfile tr').on('click', '#hapus', function(e) {
@@ -207,9 +393,11 @@
                         , name: 'name'
                     }
                     , {
-                        data: 'file'
-                        , name: 'file'
+                        data: 'files'
+                        , name: 'files'
                         , class: 'fixed-side text-center'
+                        , orderable: false
+                        , searchable: false
                     }
                     , {
                         data: 'action'
@@ -237,6 +425,88 @@
                     })
                 }
             }).modal('show')
+
+            form.off('xform-success').on('xform-success', function() {
+                tableCompanyProfile.ajax.reload(null, false)
+                $('div#addCompanyProfile').modal('hide')
+            })
+        }
+
+        edit = function(data, url, id) {
+            let form = $('#formAddCompanyProfile');
+            let getUrl = $(location).attr('href') + '/' + id + '/edit';
+            console.log(getUrl);
+            $('#titleModal').text('Edit Company Profile');
+            form.attr('action', '');
+            TriggerReset(form);
+
+            $.ajax({
+                url: getUrl,
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    form.find('input[name="name"]').val(response.name);
+
+                    $('#previews').empty(); // Ubah ID selector
+
+                    if (Array.isArray(response.files) && response.files.length > 0) {
+                        response.files.forEach(function(file, index) {
+                            let fileExtension = file.split('.').pop(); // Ambil ekstensi file
+                            let fileSize = '100 KB'; // Ini adalah contoh, ganti dengan ukuran asli jika tersedia
+
+                            let iconClass;
+                            switch (fileExtension.toLowerCase()) {
+                                case 'pdf':
+                                    iconClass = 'fa-file-pdf';
+                                    break;
+                                case 'ppt':
+                                    iconClass = 'fa-file-powerpoint';
+                                    break;
+                                default:
+                                    iconClass = 'fa-file'; // Ikon default
+                            }
+
+                            let previewHTML = `
+                                <div class="dz-preview dz-file-preview d-flex align-items-center justify-content-between">
+                                    <div class="dz-details d-flex align-items-center">
+                                        <div class="dz-icon">
+                                            <i class="fa ${iconClass} fa-3x"></i>
+                                        </div>
+                                        <div class="row">
+                                            <div class="dz-filename ms-2"><span>${file}</span></div>
+                                            <div class="dz-size ms-2"><span>${fileSize}</span></div> <!-- Ukuran file -->
+                                        </div>
+                                        <button class="dz-delete border-0 p-0 ms-2" type="button" data-file-id="${index}" data-dz-remove>
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>`;
+
+                            // Tambahkan preview ke dropzone
+                            $('#previews').append(previewHTML);
+                        });
+                    }
+
+                    // Buka modal
+                    $('div#addCompanyProfile').on('show.bs.modal', function() {
+                        $('div#addCompanyProfile').off('hidden.bs.modal');
+                        if ($('body').hasClass('modal-open')) {
+                            $('div#addCompanyProfile').on('hidden.bs.modal', function() {
+                                $('body').addClass('modal-open');
+                            });
+                        }
+                    }).modal('show');
+
+                    // Setelah form sukses di-update
+                    form.off('xform-success').on('xform-success', function() {
+                        tableCompanyProfile.ajax.reload(null, false);
+                        $('div#addCompanyProfile').modal('hide');
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Error fetching company profile data:', xhr);
+                }
+            });
         }
     })
 </script>

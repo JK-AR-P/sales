@@ -25,7 +25,7 @@ Route::middleware(['auth', 'role:admin|superadmin'])->prefix('admin')->name('adm
 
     // CRUD Company Profile
     Route::get('/company/data', [CompanyProfileController::class, 'data'])->name('company.data');
-    Route::resource('company', CompanyProfileController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::resource('company', CompanyProfileController::class);
 });
 
 // User Dashboard Routes
