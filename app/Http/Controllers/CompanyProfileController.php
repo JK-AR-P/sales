@@ -76,12 +76,14 @@ class CompanyProfileController extends Controller
                     $finalName = $filename . '-' . now()->format('d_m_Y') . '.' . $extension;
 
                     $path = $file->storeAs('company_profile', $finalName, 'public');
+                    $fileSize = $file->getSize();
 
                     $file = new CompanyProfileFile();
                     $file->company_profile_id = $companyProfile->id;
                     $file->file_name = $finalName;
                     $file->file_path = $path;
                     $file->file_type = $extension;
+                    $file->file_size = $fileSize;
                     $file->save();
                 }
             }
@@ -119,7 +121,11 @@ class CompanyProfileController extends Controller
             return response()->json([
                 'name' => $companyProfile->name,
                 'files' => $companyProfile->company_profile_files->map(function ($file) {
-                    return $file->file_name;
+                    return [
+                        'file_name' => $file->file_name,
+                        'file_size' => $file->file_size,
+                        'file_type' => $file->file_type,
+                    ];
                 })->values()->toArray(),
             ]);
         }

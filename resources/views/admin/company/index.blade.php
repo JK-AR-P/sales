@@ -113,7 +113,9 @@
             /**
              * Setup dropzone
              */
-            var myDropzone = new Dropzone("#formAddCompanyProfile", {
+
+
+            let addDropzone = new Dropzone("#formAddCompanyProfile", {
                 previewTemplate: $('#dzPreviewContainer').html(),
                 url: '{{ route('admin.company.store') }}',
                 autoProcessQueue: false,
@@ -125,7 +127,7 @@
                 previewsContainer: "#previews",
                 timeout: 0,
                 init: function() {
-                    var myDropzone = this;
+                    var addDropzone = this;
 
                     // Event for adding a file
                     this.on('addedfile', function(file) {
@@ -370,7 +372,6 @@
 
                         let data = tableCompanyProfile.row($(this).parents('tr')).data();
                         let url = $(this).data('url')
-                        let id = $(this).data('id')
                         edit(data, url, id)
                     })
 
@@ -432,81 +433,21 @@
             })
         }
 
-        edit = function(data, url, id) {
-            let form = $('#formAddCompanyProfile');
-            let getUrl = $(location).attr('href') + '/' + id + '/edit';
-            console.log(getUrl);
-            $('#titleModal').text('Edit Company Profile');
-            form.attr('action', '');
+        function edit(data, url) {
+            let form = $('#formEditCompanyProfile');
+            let inputName = form.find('input[name="name"]');
             TriggerReset(form);
 
-            $.ajax({
-                url: getUrl,
-                type: 'GET',
-                success: function(response) {
-                    console.log(response);
-                    form.find('input[name="name"]').val(response.name);
+            inputName.val(data.name);
 
-                    $('#previews').empty(); // Ubah ID selector
-
-                    if (Array.isArray(response.files) && response.files.length > 0) {
-                        response.files.forEach(function(file, index) {
-                            let fileExtension = file.split('.').pop(); // Ambil ekstensi file
-                            let fileSize = '100 KB'; // Ini adalah contoh, ganti dengan ukuran asli jika tersedia
-
-                            let iconClass;
-                            switch (fileExtension.toLowerCase()) {
-                                case 'pdf':
-                                    iconClass = 'fa-file-pdf';
-                                    break;
-                                case 'ppt':
-                                    iconClass = 'fa-file-powerpoint';
-                                    break;
-                                default:
-                                    iconClass = 'fa-file'; // Ikon default
-                            }
-
-                            let previewHTML = `
-                                <div class="dz-preview dz-file-preview d-flex align-items-center justify-content-between">
-                                    <div class="dz-details d-flex align-items-center">
-                                        <div class="dz-icon">
-                                            <i class="fa ${iconClass} fa-3x"></i>
-                                        </div>
-                                        <div class="row">
-                                            <div class="dz-filename ms-2"><span>${file}</span></div>
-                                            <div class="dz-size ms-2"><span>${fileSize}</span></div> <!-- Ukuran file -->
-                                        </div>
-                                        <button class="dz-delete border-0 p-0 ms-2" type="button" data-file-id="${index}" data-dz-remove>
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>`;
-
-                            // Tambahkan preview ke dropzone
-                            $('#previews').append(previewHTML);
-                        });
-                    }
-
-                    // Buka modal
-                    $('div#addCompanyProfile').on('show.bs.modal', function() {
-                        $('div#addCompanyProfile').off('hidden.bs.modal');
-                        if ($('body').hasClass('modal-open')) {
-                            $('div#addCompanyProfile').on('hidden.bs.modal', function() {
-                                $('body').addClass('modal-open');
-                            });
-                        }
-                    }).modal('show');
-
-                    // Setelah form sukses di-update
-                    form.off('xform-success').on('xform-success', function() {
-                        tableCompanyProfile.ajax.reload(null, false);
-                        $('div#addCompanyProfile').modal('hide');
-                    });
-                },
-                error: function(xhr) {
-                    console.error('Error fetching company profile data:', xhr);
+            $('div#addCompanyProfile').on('show.bs.modal', function() {
+                $('div#addCompanyProfile').off('hidden.bs.modal')
+                if ($('body').hasClass('modal-open')) {
+                    $('div#addCompanyProfile').on('hidden.bs.modal', function() {
+                        $('body').addClass('modal-open')
+                    })
                 }
-            });
+            }).modal('show')
         }
     })
 </script>

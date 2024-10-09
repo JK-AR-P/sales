@@ -16,6 +16,7 @@ class CompanyProfileFile extends Model
         'file_name',
         'file_type',
         'file_path',
+        'file_size',
     ];
 
     public function company_profile(): BelongsTo
