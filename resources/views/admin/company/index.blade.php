@@ -97,7 +97,6 @@
     </section>
 
     @include('admin.company.modal-add')
-    @include('admin.company.modal-edit')
 
 </div>
 @endsection
@@ -115,7 +114,7 @@
              */
 
 
-            let addDropzone = new Dropzone("#formAddCompanyProfile", {
+            let myDropzone = new Dropzone("#formAddCompanyProfile", {
                 previewTemplate: $('#dzPreviewContainer').html(),
                 url: '{{ route('admin.company.store') }}',
                 autoProcessQueue: false,
@@ -127,7 +126,7 @@
                 previewsContainer: "#previews",
                 timeout: 0,
                 init: function() {
-                    var addDropzone = this;
+                    var myDropzone = this;
 
                     // Event for adding a file
                     this.on('addedfile', function(file) {
@@ -196,10 +195,8 @@
                 if (form[0].checkValidity() === false) {
                     event.stopPropagation();
 
-                    // Show error messages & hide button spinner
                     form.addClass('was-validated');
 
-                    // If Dropzone is empty show error message
                     if (!myDropzone.getQueuedFiles().length > 0) {
                         $('.dropzone-drag-area').addClass('is-invalid').next('.invalid-feedback').show();
                     }
@@ -367,14 +364,6 @@
                 , pageLength: -1
                 , ajax: "{{ route('admin.company.data') }}"
                 , drawCallback: function(settings) {
-                    $('table#tableCompanyProfile tr').on('click', '#ubah', function(e) {
-                        e.preventDefault();
-
-                        let data = tableCompanyProfile.row($(this).parents('tr')).data();
-                        let url = $(this).data('url')
-                        edit(data, url, id)
-                    })
-
                     $('table#tableCompanyProfile tr').on('click', '#hapus', function(e) {
                         e.preventDefault();
 
@@ -433,21 +422,43 @@
             })
         }
 
-        function edit(data, url) {
-            let form = $('#formEditCompanyProfile');
-            let inputName = form.find('input[name="name"]');
-            TriggerReset(form);
+        destroy = function(data, url) {
+            Swal.fire({
+                title: 'Are you sure?'
+                , text: "Want to delete this data?"
+                , icon: 'warning'
+                , showCancelButton: true
+                , confirmButtonColor: '#6777EF'
+                , cancelButtonColor: '#FC544B'
+                , confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url
+                        , data: {
+                            _token: "{{ csrf_token() }}"
+                            , _method: "delete"
+                        }
+                        , type: 'POST'
+                        , success: function(res) {
+                            if (res.status == 'success') {
+                                toastr.success(res.toast)
+                            } else if (res.status == 'error') {
+                                toastr.error(res.toast)
+                            }
 
-            inputName.val(data.name);
-
-            $('div#addCompanyProfile').on('show.bs.modal', function() {
-                $('div#addCompanyProfile').off('hidden.bs.modal')
-                if ($('body').hasClass('modal-open')) {
-                    $('div#addCompanyProfile').on('hidden.bs.modal', function() {
-                        $('body').addClass('modal-open')
+                            tableCompanyProfile.ajax.reload(null, false)
+                        }
+                        , error: function(err) {
+                            if (err.responseJSON) {
+                                toastr.error(err.statusText + ' | ' + err.responseJSON.message)
+                            } else {
+                                toastr.error(err.statusText)
+                            }
+                        }
                     })
                 }
-            }).modal('show')
+            })
         }
     })
 </script>

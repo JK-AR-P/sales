@@ -24,6 +24,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
+            session(['role' => $role]);
+
             // if superadmin role
             if ($user->hasRole('superadmin')) {
                 switch ($role) {
