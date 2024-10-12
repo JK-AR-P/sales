@@ -97,6 +97,7 @@
     </section>
 
     @include('admin.company.modal-add')
+    @include('admin.company.modal-preview')
 
 </div>
 @endsection
@@ -135,7 +136,7 @@
                         $('.dropzone-drag-area').removeClass('is-invalid');
                         $('.invalid-feedback').html('').hide();
                         $('#formSubmit').prop('disabled', false);
-                        $('[data-dz-message]').html('To remove click the X button');
+                        $('[data-dz-message]').html('To remove click the red button');
 
                         // Get the file extension
                         var fileType = file.name.split('.').pop().toLowerCase();
@@ -364,6 +365,20 @@
                 , pageLength: -1
                 , ajax: "{{ route('admin.company.data') }}"
                 , drawCallback: function(settings) {
+                    $('table#tableCompanyProfile tr').on('click', '#preview', function(e) {
+                        e.preventDefault();
+
+                        let files = $(this).data('files')
+                        let name = $(this).data('name')
+
+                        let data = {
+                            name: name,
+                            files: files
+                        };
+
+                        preview(data)
+                    })
+
                     $('table#tableCompanyProfile tr').on('click', '#hapus', function(e) {
                         e.preventDefault();
 
@@ -420,6 +435,49 @@
                 tableCompanyProfile.ajax.reload(null, false)
                 $('div#addCompanyProfile').modal('hide')
             })
+        }
+
+        preview = function(data) {
+            console.log(data);
+            
+            let files = data.files;
+            
+            $('table.modal-table-files tbody').empty();
+            $('#titleModalPreview').text('File ' + data.name);
+
+            files.forEach(function(file) {
+                let fileSize = (file.file_size / 1024).toFixed(2) + ' KB';
+
+                let trimmedFileName = file.file_name;
+                if (trimmedFileName.length > 20) {
+                    trimmedFileName = trimmedFileName.substring(0, 20) + '...';
+                }
+
+                let fileRow = `
+                    <tr>
+                        <td>${trimmedFileName}</td>
+                        <td class="text-center">${file.file_type.toUpperCase()}</td>
+                        <td class="text-center">${fileSize}</td>
+                        <td class="text-center">
+                            <a href="/storage/${file.file_path}" target="_blank">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                // Append the new row to the table body
+                $('table.modal-table-files tbody').append(fileRow);
+            });
+
+            // Show the modal
+            $('div#previewFile').on('show.bs.modal', function() {
+                $('div#previewFile').off('hidden.bs.modal');
+                if ($('body').hasClass('modal-open')) {
+                    $('div#previewFile').on('hidden.bs.modal', function() {
+                        $('body').addClass('modal-open');
+                    });
+                }
+            }).modal('show');
         }
 
         destroy = function(data, url) {

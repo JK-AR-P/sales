@@ -9,14 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 // Index route
 Route::get('/', function () {
-    // Check if the user is authenticated
     if (Auth::check()) {
         $user = Auth::user();
 
-        // Check the user's role and redirect accordingly
         if ($user->hasRole('superadmin')) {
-            // You can store the selected role in the session to redirect accordingly
-            $role = session('role', 'admin'); // Default role for superadmin is 'admin'
+            $role = session('role', 'admin');
 
             if ($role === 'admin') {
                 return redirect()->route('admin.dashboard');
@@ -30,7 +27,6 @@ Route::get('/', function () {
         }
     }
 
-    // If the user is not authenticated, redirect to the login page
     return redirect()->route('login');
 });
 

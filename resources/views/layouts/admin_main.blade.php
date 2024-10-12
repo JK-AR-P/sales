@@ -66,6 +66,7 @@
     <script src="{{ asset('libs/datatables.net-rowgroup/js/dataTables.rowGroup.min.js') }}"></script>
     <script src="{{ asset('libs/momentjs/moment.js') }}"></script>
     <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+    <script src="{{ asset('assets/libs/dist/pspdfkit.js') }}"></script>
 
     {{-- Support JS --}}
     <script src="{{ asset('js/support/loader.js') }}"></script>

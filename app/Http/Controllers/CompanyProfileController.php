@@ -30,11 +30,10 @@ class CompanyProfileController extends Controller
             return DataTables::of($companies)
                 ->addIndexColumn()
                 ->addColumn('files', function ($row) {
-                    $btn = '<button class="btn icon btn-info" data-toggle="modal" data-target="#fileModal" data-id="' . $row->id . '" data-name="' . $row->name . '" data-files=\'' . json_encode($row->company_profile_files) . '\'><i class="fa fa-file"</i></button>';
+                    $btn = '<button class="btn icon btn-info" id="preview" data-name="' . $row->name . '" data-files=\'' . json_encode($row->company_profile_files) . '\'><i class="fa fa-file"></i></button>';
                     return $btn;
                 })
                 ->addColumn('action', function ($row) {
-                    $id = encrypt($row['id']);
                     $route_delete = route('admin.company.destroy', encrypt($row['id']));
                     $btn = '';
 
