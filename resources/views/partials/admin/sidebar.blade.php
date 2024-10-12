@@ -29,7 +29,7 @@
                         <span>Company Profile</span>
                     </a>
                 </li><li class="sidebar-item">
-                    <a href="../admin_catalog/index.php" class='sidebar-link'>
+                    <a href="{{ route('admin.catalog.index') }}" class='sidebar-link'>
                         <i data-feather="book" width="20"></i>
                         <span>Catalog</span>
                     </a>

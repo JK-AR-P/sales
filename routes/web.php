@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Traits\HasRoles;
 
 // Index route
 Route::get('/', function () {
@@ -55,7 +57,11 @@ Route::middleware(['auth', 'role:admin|superadmin'])->prefix('admin')->name('adm
 
     // CRUD Company Profile
     Route::get('/company/data', [CompanyProfileController::class, 'data'])->name('company.data');
-    Route::resource('company', CompanyProfileController::class);
+    Route::resource('company', CompanyProfileController::class)->only(['index', 'store', 'destroy']);
+
+    // CRUD Catalog
+    Route::get('/catalog/data', [CatalogController::class, 'data'])->name('catalog.data');
+    Route::resource('catalog', CatalogController::class)->only(['index', 'store', 'destroy']);;
 });
 
 // User Dashboard Routes

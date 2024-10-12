@@ -56,12 +56,12 @@
     <div class="page-title">
         <div class="row mb-2">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h4>List File Company Profile</h4>
+                <h4>List File Catalog</h4>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class='breadcrumb-header'>
                     <ol class="breadcrumb">
-                        <button class="btn icon icon-left btn-primary" id="btnAddCompanyProfile"><i data-feather="plus"></i> Add Data</button>
+                        <button class="btn icon icon-left btn-primary" id="btnAddCatalog"><i data-feather="plus"></i> Add Data</button>
                     </ol>
                 </nav>
             </div>
@@ -72,12 +72,12 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class='table table-striped' id="tableCompanyProfile">
+                    <table class='table table-striped' id="tableCatalog">
                         <thead>
                             <tr>
                                 <th class="text-center" width="1%">No</th>
-                                <th class="text-center" width="40%">Nama Perusahaan</th>
-                                <th class="text-center">File .PDF / .PPT</th>
+                                <th class="text-center" width="40%">Nama File</th>
+                                <th class="text-center">File .PDF</th>
                                 <th class="text-center" width="20%"><i class="fa fa-gear"></i></th>
                             </tr>
                         </thead>
@@ -96,15 +96,15 @@
         </div>
     </section>
 
-    @include('admin.company.modal-add')
-    @include('admin.company.modal-preview')
+    @include('admin.catalog.modal-add')
+    @include('admin.catalog.modal-preview')
 
 </div>
 @endsection
 @section('js')
 <script>
     $(document).ready(function() {
-        let tableCompanyProfile;
+        let tableCatalog;
         $(function() {
             loadData();
 
@@ -113,15 +113,15 @@
              * Setup dropzone
              */
 
-            let myDropzone = new Dropzone("#formAddCompanyProfile", {
+            let myDropzone = new Dropzone("#formAddCatalog", {
                 previewTemplate: $('#dzPreviewContainer').html(),
-                url: '{{ route('admin.company.store') }}',
+                url: '{{ route('admin.catalog.store') }}',
                 autoProcessQueue: false,
                 uploadMultiple: true,
                 parallelUploads: 5,
                 maxFiles: 10,
                 maxFilesize: 10, // Limit of 2 MB
-                acceptedFiles: '.pdf, .ppt, .pptx', // Only accept these file types
+                acceptedFiles: '.pdf', // Only accept these file types
                 previewsContainer: "#previews",
                 timeout: 0,
                 init: function() {
@@ -138,13 +138,7 @@
 
                         // Get the file extension
                         var fileType = file.name.split('.').pop().toLowerCase();
-                        var iconClass = 'fa-file';
-
-                        if (['pdf'].includes(fileType)) {
-                            iconClass = 'fa-file-pdf'; // PDF icon
-                        } else if (['ppt', 'pptx'].includes(fileType)) {
-                            iconClass = 'fa-file-powerpoint'; // PowerPoint icon
-                        }
+                        var iconClass = 'fa-file-pdf';
 
                         // Update the icon in the preview
                         $(file.previewElement).find('.dz-icon i').attr('class', 'fa ' + iconClass + ' fa-3x');
@@ -172,10 +166,10 @@
 
                     // Accept callback for custom validation
                     this.on('accept', function(file, done) {
-                        if (['pdf', 'ppt', 'pptx'].includes(file.name.split('.').pop().toLowerCase())) {
+                        if (['pdf'].includes(file.name.split('.').pop().toLowerCase())) {
                             done(); // Accept the file
                         } else {
-                            done("Invalid file type. Only .pdf, .ppt, and .pptx are allowed."); // Reject the file
+                            done("Invalid file type. Only .pdf are allowed."); // Reject the file
                         }
                     });
                 }
@@ -183,7 +177,7 @@
 
 
             $('#formSubmit').on('click', function(event) {
-                let form = $('#formAddCompanyProfile');
+                let form = $('#formAddCatalog');
                 event.preventDefault();
                 var $this = $(this);
 
@@ -339,18 +333,18 @@
                 }
             });
 
-            $('#btnAddCompanyProfile').on('click', function() {
+            $('#btnAddCatalog').on('click', function() {
                 add()
             })
         })
 
         loadData = function() {
-            if (undefined !== tableCompanyProfile) {
-                tableCompanyProfile.destroy()
-                tableCompanyProfile.clear().draw();
+            if (undefined !== tableCatalog) {
+                tableCatalog.destroy()
+                tableCatalog.clear().draw();
             }
 
-            tableCompanyProfile = $('#tableCompanyProfile').DataTable({
+            tableCatalog = $('#tableCatalog').DataTable({
                 responsive: true
                 , searching: true
                 , autoWidth: false
@@ -361,9 +355,9 @@
                     , [5, 10, 25, 50, 100, 250, 500, "All"]
                 ]
                 , pageLength: 25
-                , ajax: "{{ route('admin.company.data') }}"
+                , ajax: "{{ route('admin.catalog.data') }}"
                 , drawCallback: function(settings) {
-                    $('table#tableCompanyProfile tr').on('click', '#preview', function(e) {
+                    $('table#tableCatalog tr').on('click', '#preview', function(e) {
                         e.preventDefault();
 
                         let files = $(this).data('files')
@@ -377,10 +371,10 @@
                         preview(data)
                     })
 
-                    $('table#tableCompanyProfile tr').on('click', '#hapus', function(e) {
+                    $('table#tableCatalog tr').on('click', '#hapus', function(e) {
                         e.preventDefault();
 
-                        let data = tableCompanyProfile.row($(this).parents('tr')).data();
+                        let data = tableCatalog.row($(this).parents('tr')).data();
                         let url = $(this).data('url')
                         destroy(data, url)
                     })
@@ -411,27 +405,27 @@
                     }
                 , ]
             , })
-            tableCompanyProfile.on('draw', function() {
+            tableCatalog.on('draw', function() {
                 $('[data-toggle="tooltip"]').tooltip()
             })
         }
 
         add = function() {
-            let form = $('#formAddCompanyProfile')
+            let form = $('#formAddCatalog')
             TriggerReset(form)
 
-            $('div#addCompanyProfile').on('show.bs.modal', function() {
-                $('div#addCompanyProfile').off('hidden.bs.modal')
+            $('div#addCatalog').on('show.bs.modal', function() {
+                $('div#addCatalog').off('hidden.bs.modal')
                 if ($('body').hasClass('modal-open')) {
-                    $('div#addCompanyProfile').on('hidden.bs.modal', function() {
+                    $('div#addCatalog').on('hidden.bs.modal', function() {
                         $('body').addClass('modal-open')
                     })
                 }
             }).modal('show')
 
             form.off('xform-success').on('xform-success', function() {
-                tableCompanyProfile.ajax.reload(null, false)
-                $('div#addCompanyProfile').modal('hide')
+                tableCatalog.ajax.reload(null, false)
+                $('div#addCatalog').modal('hide')
             })
         }
 
@@ -503,7 +497,7 @@
                                 toastr.error(res.toast)
                             }
 
-                            tableCompanyProfile.ajax.reload(null, false)
+                            tableCatalog.ajax.reload(null, false)
                         }
                         , error: function(err) {
                             if (err.responseJSON) {
