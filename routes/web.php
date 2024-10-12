@@ -30,6 +30,12 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/logout-temp', function () {
+    Auth::logout(); // Log out the user
+    session()->flush(); // Hapus semua session
+    return redirect('/'); // Redirect ke halaman login atau home
+});
+
 // Authentication Routes
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'login')->name('login')->middleware('guest');

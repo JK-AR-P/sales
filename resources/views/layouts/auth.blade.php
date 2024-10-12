@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700">
     <link rel="stylesheet" id="css-main" href="{{ asset('css/codebase.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_assets/css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('../admin_assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin_assets/css/bootstrap.css') }}">
 
     {{-- Additional CSS --}}
     <link rel="stylesheet" href="{{ asset('libs/select2/dist/css/select2.min.css') }}">
@@ -56,10 +56,43 @@
     <script src="{{ asset('libs/datatables.net-rowgroup/js/dataTables.rowGroup.min.js') }}"></script>
 
     {{-- Support JS --}}
-    <script src="{{ asset('js/support/loader.js') }}"></script>
+    {{-- <script src="{{ asset('js/support/loader.js') }}"></script> --}}
     <script src="{{ asset('js/support/support.js') }}"></script>
 
     <script>
+        $(document).ready(function() {
+            let initialRole = $('select[name="role"]').val();
+            toggleInputs(initialRole);
+
+            $('select[name="role"]').on('change', function() {
+                let role = $(this).val();
+                toggleInputs(role);
+            });
+
+            function toggleInputs(role) {
+                const inputs = {
+                    admin: {
+                        show: ['#container-username', '#container-password'],
+                        hide: ['#container-telp', '#container-date'],
+                        enable: ['#username', '#password'],
+                        disable: ['#telp', '#birthdate']
+                    },
+                    user: {
+                        show: ['#container-telp', '#container-date'],
+                        hide: ['#container-username', '#container-password'],
+                        enable: ['#telp', '#birthdate'],
+                        disable: ['#username', '#password']
+                    }
+                };
+
+                inputs[role].show.forEach(selector => $(selector).show());
+                inputs[role].hide.forEach(selector => $(selector).hide());
+
+                inputs[role].enable.forEach(selector => $(selector).prop('disabled', false));
+                inputs[role].disable.forEach(selector => $(selector).prop('disabled', true));
+            }
+        });
+
         paceOptions = {
             elements: true
         };

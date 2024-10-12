@@ -15,7 +15,7 @@
                                 <th>Nama File</th>
                                 <th class="text-center">Tipe</th>
                                 <th class="text-center">Size</th>
-                                <th class="text-center">Show</th>
+                                <th class="text-center" width="20%"><i class="fa fa-gear"></i></th>
                             </tr>
                         </thead>
                         <tbody>

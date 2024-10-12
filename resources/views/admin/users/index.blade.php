@@ -82,7 +82,7 @@
                         [5, 10, 25, 50, 100, 250, 500, -1]
                         , [5, 10, 25, 50, 100, 250, 500, "All"]
                     ]
-                    , pageLength: -1
+                    , pageLength: 50
                     , ajax: "{{ route('admin.marketing.data') }}"
                     , drawCallback: function(settings) {
                         $('table#tableUsers tr').on('click', '#ubah', function(e) {

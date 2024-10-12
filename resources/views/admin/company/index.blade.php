@@ -109,11 +109,9 @@
             loadData();
 
             Dropzone.autoDiscover = false;
-
             /**
              * Setup dropzone
              */
-
 
             let myDropzone = new Dropzone("#formAddCompanyProfile", {
                 previewTemplate: $('#dzPreviewContainer').html(),
@@ -362,7 +360,7 @@
                     [5, 10, 25, 50, 100, 250, 500, -1]
                     , [5, 10, 25, 50, 100, 250, 500, "All"]
                 ]
-                , pageLength: -1
+                , pageLength: 25
                 , ajax: "{{ route('admin.company.data') }}"
                 , drawCallback: function(settings) {
                     $('table#tableCompanyProfile tr').on('click', '#preview', function(e) {
