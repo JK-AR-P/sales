@@ -25,11 +25,8 @@ class NewUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fullname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'telp' => 'required|numeric|min:10|unique:users,telp',
-            'birthdate' => 'required|date',
-            'region' => 'required|string|max:255',
+            'username' => 'required|lowercase|string|max:50|unique:users,username',
+            'password' => 'required|string|min:6|confirmed'
         ];
     }
 

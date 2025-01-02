@@ -420,6 +420,30 @@
             let form = $('#formAddCompanyProfile')
             TriggerReset(form)
 
+            $.ajax({
+                url: '{{ route('admin.company.get') }}',
+                type: 'GET',
+                success: function(res) {
+                    console.log(res);
+                    let companies = res.data;
+                    let companiesHtml = '';
+                    companiesHtml += '<option value="0" selected disabled>Pilih Perusahaan</option>';
+                    
+                    companies.forEach(function(company) {
+                        companiesHtml += `<option value="${company.id}">${company.name}</option>`;
+                    });
+
+                    $('#id_company').html(companiesHtml);
+                },
+                error: function(err) {
+                    if (err.responseJSON) {
+                        toastr.error(err.statusText + ' | ' + err.responseJSON.message);
+                    } else {
+                        toastr.error(err.statusText);
+                    }
+                }
+            });
+
             $('div#addCompanyProfile').on('show.bs.modal', function() {
                 $('div#addCompanyProfile').off('hidden.bs.modal')
                 if ($('body').hasClass('modal-open')) {

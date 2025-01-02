@@ -9,7 +9,7 @@ $(document).ready(function () {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, log me out!',
+            confirmButtonText: 'Yes, Logout!',
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -21,6 +21,7 @@ $(document).ready(function () {
     $('.select2').select2({
         width: "100%",
         placeholder: "Choose",
-        allowClear: true
+        allowClear: true,
+        theme: "bootstrap5",
     });
 });

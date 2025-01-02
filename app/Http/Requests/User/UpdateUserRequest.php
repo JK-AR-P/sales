@@ -23,13 +23,11 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = decrypt($this->route('marketing'));
+        $userId = decrypt($this->route('user'));
         return [
-            'fullname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $userId,
-            'telp' => 'required|numeric|min:10|unique:users,telp,' . $userId,
-            'birthdate' => 'required|date',
-            'region' => 'required|string|max:255',
+            'id_company' => 'required|string',
+            'username' => 'required|string|max:100|unique:users,username,' . $userId,
+            'password' => 'string|min:6|confirmed|nullable'
         ];
     }
 

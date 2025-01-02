@@ -25,7 +25,7 @@ class NewCompanyProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'id_company' => 'required|string|exists:hris.companies,id',
             'files.*' => 'file:pdf,ppt,pptx',
         ];
     }

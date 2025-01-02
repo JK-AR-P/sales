@@ -9,18 +9,12 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="../admin_request/index.php" class='sidebar-link'>
-                        <i data-feather="layers" width="20"></i>
-                        <span>Request Certificate</span>
-                    </a>
-                </li>
 
                 <li class='sidebar-title'>Data Master</li>
                 <li class="sidebar-item">
-                    <a href="{{ route('admin.marketing.index') }}" class='sidebar-link'>
+                    <a href="{{ route('admin.users.index') }}" class='sidebar-link'>
                         <i data-feather="users" width="20"></i>
-                        <span>Marketing</span>
+                        <span>Admin</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -32,11 +26,6 @@
                     <a href="{{ route('admin.catalog.index') }}" class='sidebar-link'>
                         <i data-feather="book" width="20"></i>
                         <span>Catalog</span>
-                    </a>
-                </li><li class="sidebar-item">
-                    <a href="../admin_ecard/index.php" class='sidebar-link'>
-                        <i data-feather="credit-card" width="20"></i>
-                        <span>E-Card</span>
                     </a>
                 </li>
             </ul>

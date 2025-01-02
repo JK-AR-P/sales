@@ -1,9 +1,9 @@
-<div class="modal fade" id="addCompanyProfile" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+<div class="modal fade" id="addCompanyProfile" tabindex="-1" role="dialog" aria-labelledby="titleModal">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <form action="{{ route('admin.company.store') }}" method="POST" enctype="multipart/form-data" id="formAddCompanyProfile" class="dropzone">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="titleModal">Upload Company Profile</h5>
+                    <h5 class="modal-title" id="titleModal"><b>Upload Company Profile</b></h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
@@ -11,10 +11,12 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Nama Perusahaan</label>
+                            <label>Perusahaan</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="name" placeholder="Nama">
+                            <select name="id_company" id="id_company" class="form-control" aria-label="Company">
+
+                            </select>
                         </div>
 
                         <div class="col-md-4">

@@ -1,11 +1,29 @@
 @extends('layouts.admin_main')
+@section('css')
+    <style>
+        .password-field {
+            position: relative;
+        }
+        .password-field input {
+            width: 100%;
+            padding-right: 30px;
+        }
+        .password-field .toggle-password {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+@endsection
 @section('content')
 <div class="main-content container-fluid">
 
     <div class="page-title">
         <div class="row mb-2">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h4>List User Marketing</h4>
+                <h4>List User Admin</h4>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class='breadcrumb-header'>
@@ -21,21 +39,17 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class='table table-striped table-sm' id="tableUsers">
-                        <thead class="thead-dark text-center text-light">
+                    <table class='table table-sm table-bordered table-hover' id="tableUsers">
+                        <thead class="thead-dark text-uppercase text-light">
                             <tr>
-                                <th class="text-center" width="1%">No</th>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center" width="8%">Email</th>
-                                <th class="text-center" width="10%">Telepon</th>
-                                <th class="text-center">Tgl Lahir</th>
-                                <th class="text-center" width="8%">Wilayah</th>
-                                <th class="text-center">Foto</th>
-                                <th class="text-center" width="10%"><i class="fa fa-gear"></i></th>
+                                <th class="text-center" width="5%">No</th>
+                                <th>Perusahaan</th>
+                                <th>Username</th>
+                                <th class="text-center" width="15%"><i class="fa fa-gear"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <td colspan="8" class="text-center">
+                            <td colspan="4" class="text-center">
                                 <div class="d-flex justify-content-center">
                                     <div class="spinner-border text-primary" role="status">
                                         <span class="visually-hidden">Loading...</span>
@@ -60,6 +74,7 @@
         let tableUsers;
             $(function() {
                 loadData();
+                passwordToggle();
 
                 $('#btnAddUser').on('click', function() {
                     add()
@@ -83,7 +98,7 @@
                         , [5, 10, 25, 50, 100, 250, 500, "All"]
                     ]
                     , pageLength: 50
-                    , ajax: "{{ route('admin.marketing.data') }}"
+                    , ajax: "{{ route('admin.admin.data') }}"
                     , drawCallback: function(settings) {
                         $('table#tableUsers tr').on('click', '#ubah', function(e) {
                             e.preventDefault();
@@ -104,35 +119,17 @@
                     , columns: [{
                             data: 'DT_RowIndex'
                             , name: 'DT_RowIndex'
-                            , width: '1%'
                             , class: 'fixed-side text-center'
-                        }
-                        , {
-                            data: 'fullname'
-                            , name: 'fullname'
-                        }
-                        , {
-                            data: 'email'
-                            , name: 'email'
-                        }
-                        , {
-                            data: 'telp'
-                            , name: 'telp'
-                        }
-                        , {
-                            data: 'birthdate'
-                            , name: 'birthdate'
-                        }
-                        , {
-                            data: 'region'
-                            , name: 'region'
-                        }
-                        , {
-                            data: 'photo_profile'
-                            , name: 'photo_profile'
-                            , class: 'fixed-side text-center'
-                        }
-                        , {
+                        },
+                        {
+                            data: 'company', 
+                            name: 'company'
+                        },
+                        {
+                            data: 'username', 
+                            name: 'username'
+                        },
+                        {
                             data: 'action'
                             , name: 'action'
                             , class: 'fixed-side text-center'
@@ -166,20 +163,13 @@
             }
 
             edit = function(data, url) {
+                console.log(data);
                 let form = $('#formEditUser')
                 TriggerReset(form)
                 form.attr('action', url)
 
-                form.find('input, select').each(function() {
-                    let inputName = $(this).attr('name');
-                    if (data[inputName]) {
-                        if (inputName === 'birthdate') {
-                            $(this).val(moment(data[inputName], 'YYYY-MM-DD').format('YYYY-MM-DD')); // Format sesuai input date
-                        } else {
-                            $(this).val(data[inputName]); // Set value if key exists in data
-                        }
-                    }
-                });
+                form.find('select[name="id_company"]').val(data.id_company).trigger('change');
+                form.find('input[name="username"]').val(data.username);
 
                 $('div#editModalMarketing').on('show.bs.modal', function() {
                     $('div#editModalMarketing').off('hidden.bs.modal')
@@ -210,8 +200,8 @@
                         $.ajax({
                             url: url
                             , data: {
-                                _token: "{{ csrf_token() }}"
-                                , _method: "delete"
+                                _token: "{{ csrf_token() }}", 
+                                _method: "delete"
                             }
                             , type: 'POST'
                             , success: function(res) {
@@ -235,6 +225,17 @@
                 })
             }
 
+            passwordToggle = function() {
+                $('#togglePassword').on('click', function() {
+                    if ($('#password').attr('type') === 'password') {
+                        $('#password').attr('type', 'text');
+                        $(this).removeClass('fa-eye').addClass('fa-eye-slash');
+                    } else {
+                        $('#password').attr('type', 'password');
+                        $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+                    }
+                });
+            }
     });
 
 </script>

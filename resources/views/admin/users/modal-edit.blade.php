@@ -4,7 +4,7 @@
             <form action="" class="xform" method="POST" id="formEditUser" class="xform">
                 @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Edit Data Marketing</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Edit Admin User</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
                     </button>
@@ -12,52 +12,37 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Nama</label>
+                            <label>Perusahaan</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="fullname" placeholder="Fullname" value="Rifan Hardiyan">
+                            <select name="id_company" id="id_company" class="form-control" aria-label="Company">
+                                <option value="0" selected disabled>Pilih Perusahaan</option>
+                                @foreach($companies as $company)
+                                    <option value="{{ $company->id }}">{{ $company->kd_company }} - {{ $company->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="col-md-4">
-                            <label>Email</label>
+                            <label>Username</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="email" class="form-control" name="email" placeholder="Email" value="rifan@arita.co.id">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
                         </div>
 
                         <div class="col-md-4">
-                            <label>Telepon</label>
+                            <label>Change Password</label>
                         </div>
-                        <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="telp" placeholder="0" value="081345946704">
+                        <div class="col-md-8 form-group password-field">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="*****">
+                            <i class="far fa-eye toggle-password" id="togglePassword"></i>
                         </div>
-
                         <div class="col-md-4">
-                            <label>Tgl Lahir</label>
+                            <label>Confirm Password</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="date" class="form-control" name="birthdate">
+                            <input type="password" class="form-control" name="password_confirmation" placeholder="*****">
                         </div>
-
-                        <div class="col-md-4">
-                            <label>Wilayah</label>
-                        </div>
-                        <div class="col-md-8 form-group">
-                            <input type="text" class="form-control" name="region" placeholder="Wilayah" value="Jakarta">
-                        </div>
-
-                        {{-- <div class="col-md-4">
-                            <label>Upload Foto</label>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-file">
-                                <input type="file" class="form-file-input" id="customFile">
-                                <label class="form-file-label" for="customFile">
-                                    <span class="form-file-text">Choose file...</span>
-                                    <span class="form-file-button">Browse</span>
-                                </label>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
                 <div class="modal-footer">

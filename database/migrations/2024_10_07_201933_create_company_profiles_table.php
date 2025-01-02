@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('company_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('id_company');
             $table->timestamps();
             $table->softDeletes();
+
+        $table->foreign('id_company')->references('id')->on('hris.companies')->onDelete('cascade');
         });
     }
 

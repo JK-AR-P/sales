@@ -26,12 +26,8 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'id_company' => null,
             'username' => $this->faker->userName,
-            'fullname' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'telp' => $this->faker->phoneNumber,
-            'birthdate' => $this->faker->date('Y-m-d', '2000-01-01'),
-            'region' => $this->faker->city,
             'password' => Hash::make('password'), // Default password for all users
         ];
     }

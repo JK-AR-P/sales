@@ -93,7 +93,8 @@ return [
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
-            'search_path' => 'public',
+            'schema' => 'e_catalog',
+            'search_path' => 'e_catalog', /* set schema e_catalog */
             'sslmode' => 'prefer',
         ],
 

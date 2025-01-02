@@ -6,8 +6,8 @@ use Laravolt\Avatar\Facade as Laravolt;
 
 class Avatar
 {
-    public static function generateAvatar($fullname)
+    public static function generateAvatar($username)
     {
-        return Laravolt::create($fullname)->toBase64();
+        return Laravolt::create($username)->toBase64();
     }
 }

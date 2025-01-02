@@ -13,17 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('id_company')->nullable();
             $table->string('username')->nullable();
-            $table->string('fullname');
-            $table->string('email')->unique();
-            $table->string('telp');
-            $table->date('birthdate')->nullable();
-            $table->string('region')->nullable();
             $table->string('photo_profile')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('id_company')->references('id')->on('hris.companies')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

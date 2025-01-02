@@ -70,6 +70,7 @@
     {{-- Support JS --}}
     <script src="{{ asset('js/support/loader.js') }}"></script>
     <script src="{{ asset('js/support/support.js') }}"></script>
+    <script src="{{ asset('js/support/script.js') }}"></script>
 
     <script>
         paceOptions = {

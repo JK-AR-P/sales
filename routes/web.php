@@ -14,7 +14,7 @@ Route::get('/', function () {
     if (Auth::check()) {
         $user = Auth::user();
 
-        if ($user->hasRole('superadmin')) {
+        if ($user->hasRole('admin')) {
             $role = session('role', 'admin');
 
             if ($role === 'admin') {
@@ -33,9 +33,9 @@ Route::get('/', function () {
 });
 
 Route::get('/logout-temp', function () {
-    Auth::logout(); // Log out the user
-    session()->flush(); // Hapus semua session
-    return redirect('/'); // Redirect ke halaman login atau home
+    Auth::logout();
+    session()->flush();
+    return redirect('/');
 });
 
 // Authentication Routes
@@ -48,15 +48,16 @@ Route::controller(AuthController::class)->group(function () {
 // Admin Dashboard Routes
 Route::middleware(['auth', 'role:admin|superadmin'])->prefix('admin')->name('admin.')->group(function () {
     Route::controller(DashboardController::class)->group(function () {
-        Route::get('/', 'admin')->name('dashboard');
+        Route::get('/dashboard', 'admin')->name('dashboard');
     });
 
-    // CRUD User Marketing
-    Route::get('/marketing/data', [UserController::class, 'data'])->name('marketing.data');
-    Route::resource('marketing', UserController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    // CRUD User Admin
+    Route::get('/data', [UserController::class, 'data'])->name('admin.data');
+    Route::resource('users', UserController::class)->only(['index', 'update', 'show', 'store', 'destroy']);
 
     // CRUD Company Profile
     Route::get('/company/data', [CompanyProfileController::class, 'data'])->name('company.data');
+    Route::get('/company/get', [CompanyProfileController::class, 'getCompanies'])->name('company.get');
     Route::resource('company', CompanyProfileController::class)->only(['index', 'store', 'destroy']);
 
     // CRUD Catalog

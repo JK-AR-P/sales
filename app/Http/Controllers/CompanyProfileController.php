@@ -63,7 +63,7 @@ class CompanyProfileController extends Controller
             DB::beginTransaction();
 
             $companyProfile = new CompanyProfile();
-            $companyProfile->name = $request->name;
+            $companyProfile->id_company = $request->id_company;
             $companyProfile->save();
 
             if ($request->hasFile('files')) {
@@ -90,7 +90,7 @@ class CompanyProfileController extends Controller
             return response()->json([
                 'status' => 'success',
                 'toast' => 'Company profile added successfully',
-            ], 200);
+            ]);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -161,5 +161,19 @@ class CompanyProfileController extends Controller
                 'toast' => 'Error while deleting company profile: ' . $e->getMessage(),
             ]);
         }
+    }
+
+    public function getCompanies()
+    {
+        $companies = DB::table('hris.companies')
+                        ->select('id', 'name', 'kd_company')
+                        ->orderBy('name', 'asc')
+                        ->where('deleted_at', null)
+                        ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $companies,
+        ]);
     }
 }
